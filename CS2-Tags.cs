@@ -360,8 +360,8 @@ public class CS2_Tags : BasePlugin
 
 	private void SetPlayerClanTag()
 	{
-		foreach (CCSPlayerController player in connectedPlayers.Values)
-                {
+		foreach(CCSPlayerController player in Utilities.GetPlayers())
+            	{
  
 		if (player == null || !player.IsValid || player.IsBot || player.IsHLTV || player.AuthorizedSteamID == null) continue;
 
