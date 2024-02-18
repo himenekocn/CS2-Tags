@@ -132,7 +132,7 @@ public class CS2_Tags : BasePlugin
 
 		if (player == null || !player.IsValid || player.IsBot || player.IsHLTV) return;
 
-		AddTimer(2.0f, () => SetPlayerClanTag(player));
+		AddTimer(2.0f, () => SetPlayerClanTag());
 	}
 
 	private HookResult OnPlayerConnectFull(EventPlayerConnectFull @event, GameEventInfo info)
@@ -141,7 +141,7 @@ public class CS2_Tags : BasePlugin
 
 		if (player == null || !player.IsValid || player.IsBot || player.IsHLTV) return HookResult.Continue;
 
-		AddTimer(2.0f, () => SetPlayerClanTag(player));
+		AddTimer(2.0f, () => SetPlayerClanTag());
 
 		return HookResult.Continue;
 	}
@@ -160,7 +160,7 @@ public class CS2_Tags : BasePlugin
 		CCSPlayerController? player = @event.Userid;
 		if (player == null || !player.IsValid || player.IsBot) return HookResult.Continue;
 
-		AddTimer(1.5f, () => SetPlayerClanTag(player));
+		AddTimer(1.5f, () => SetPlayerClanTag());
 
 		return HookResult.Continue;
 	}
@@ -170,7 +170,7 @@ public class CS2_Tags : BasePlugin
 		CCSPlayerController? player = @event.Userid;
 		if (player == null || !player.IsValid || player.IsBot) return HookResult.Continue;
 
-		AddTimer(1.5f, () => SetPlayerClanTag(player));
+		AddTimer(1.5f, () => SetPlayerClanTag());
 
 		return HookResult.Continue;
 	}
@@ -358,9 +358,12 @@ public class CS2_Tags : BasePlugin
 		return HookResult.Continue;
 	}
 
-	private void SetPlayerClanTag(CCSPlayerController? player)
+	private void SetPlayerClanTag()
 	{
-		if (player == null || !player.IsValid || player.IsBot || player.IsHLTV || player.AuthorizedSteamID == null) return;
+		foreach (CCSPlayerController player in connectedPlayers.Values)
+                {
+ 
+		if (player == null || !player.IsValid || player.IsBot || player.IsHLTV || player.AuthorizedSteamID == null) continue;
 
 		string steamid = player.SteamID!.ToString();
 
@@ -426,6 +429,7 @@ public class CS2_Tags : BasePlugin
 				}
 			}
 		}
+  		}
 	}
 
 	private string TeamName(int teamNum)
