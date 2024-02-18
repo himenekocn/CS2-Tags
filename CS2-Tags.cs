@@ -39,7 +39,7 @@ public class CS2_Tags : BasePlugin
 	{
 		GaggedIds.Clear();
 	}
-
+	
 	private static void CreateOrLoadJsonFile(string filepath)
 	{
 		if (!File.Exists(filepath))
