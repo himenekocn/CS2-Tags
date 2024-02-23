@@ -167,7 +167,7 @@ public class CS2_Tags : BasePlugin
         	return HookResult.Continue;
     	}
 
-	private HookResult OnPlayerSpawned(EventPlayerSpawn @event, GameEventInfo info)
+	private HookResult OnPlayerSpawned(EventPlayerSpawned @event, GameEventInfo info)
  	{
  		CCSPlayerController? player = @event.Userid;
 		if (player == null || !player.IsValid || player.IsBot) return HookResult.Continue;
