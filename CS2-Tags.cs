@@ -153,6 +153,8 @@ public class CS2_Tags : BasePlugin
 		if (player == null || !player.IsValid || player.IsBot || player.IsHLTV) return;
 
 		GaggedIds.Remove(player.SteamID.ToString()!);
+
+  		AddTimer(2.0f, () => SetPlayerClanTag());
 	}
 
 	private HookResult OnPlayerSpawn(EventPlayerSpawn @event, GameEventInfo info)
