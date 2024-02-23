@@ -30,6 +30,8 @@ public class CS2_Tags : BasePlugin
 		RegisterListener<Listeners.OnClientDisconnect>(OnClientDisconnect);
 		RegisterEventHandler<EventPlayerConnectFull>(OnPlayerConnectFull);
 		RegisterEventHandler<EventPlayerSpawn>(OnPlayerSpawn);
+  		RegisterEventHandler<EventPlayerSpawned>(OnPlayerSpawned);
+    		RegisterEventHandler<EventPlayerTeam>(OnPlayerTeam);
 		RegisterEventHandler<EventPlayerDeath>(OnPlayerDeath);
 		AddCommandListener("say", OnPlayerChat);
 		AddCommandListener("say_team", OnPlayerChatTeam);
@@ -39,7 +41,7 @@ public class CS2_Tags : BasePlugin
 	{
 		GaggedIds.Clear();
 	}
-	
+
 	private static void CreateOrLoadJsonFile(string filepath)
 	{
 		if (!File.Exists(filepath))
@@ -132,7 +134,7 @@ public class CS2_Tags : BasePlugin
 
 		if (player == null || !player.IsValid || player.IsBot || player.IsHLTV) return;
 
-		AddTimer(2.0f, () => SetPlayerClanTag());
+		AddTimer(2.0f, () => SetPlayerClanTag(player));
 	}
 
 	private HookResult OnPlayerConnectFull(EventPlayerConnectFull @event, GameEventInfo info)
@@ -141,7 +143,7 @@ public class CS2_Tags : BasePlugin
 
 		if (player == null || !player.IsValid || player.IsBot || player.IsHLTV) return HookResult.Continue;
 
-		AddTimer(2.0f, () => SetPlayerClanTag());
+		AddTimer(2.0f, () => SetPlayerClanTag(player));
 
 		return HookResult.Continue;
 	}
@@ -153,8 +155,26 @@ public class CS2_Tags : BasePlugin
 		if (player == null || !player.IsValid || player.IsBot || player.IsHLTV) return;
 
 		GaggedIds.Remove(player.SteamID.ToString()!);
+	}
 
-  		AddTimer(2.0f, () => SetPlayerClanTag());
+	private HookResult OnPlayerTeam(EventPlayerTeam @event, GameEventInfo info)
+    	{
+        	CCSPlayerController? player = @event.Userid;
+		if (player == null || !player.IsValid || player.IsBot) return HookResult.Continue;
+
+		AddTimer(1.5f, () => SetPlayerClanTag(player));
+  
+        	return HookResult.Continue;
+    	}
+
+	private HookResult OnPlayerSpawned(EventPlayerSpawn @event, GameEventInfo info)
+ 	{
+ 		CCSPlayerController? player = @event.Userid;
+		if (player == null || !player.IsValid || player.IsBot) return HookResult.Continue;
+
+		AddTimer(1.5f, () => SetPlayerClanTag(player));
+
+		return HookResult.Continue;
 	}
 
 	private HookResult OnPlayerSpawn(EventPlayerSpawn @event, GameEventInfo info)
@@ -162,7 +182,7 @@ public class CS2_Tags : BasePlugin
 		CCSPlayerController? player = @event.Userid;
 		if (player == null || !player.IsValid || player.IsBot) return HookResult.Continue;
 
-		AddTimer(1.5f, () => SetPlayerClanTag());
+		AddTimer(1.5f, () => SetPlayerClanTag(player));
 
 		return HookResult.Continue;
 	}
@@ -172,7 +192,7 @@ public class CS2_Tags : BasePlugin
 		CCSPlayerController? player = @event.Userid;
 		if (player == null || !player.IsValid || player.IsBot) return HookResult.Continue;
 
-		AddTimer(1.5f, () => SetPlayerClanTag());
+		AddTimer(1.5f, () => SetPlayerClanTag(player));
 
 		return HookResult.Continue;
 	}
@@ -360,12 +380,9 @@ public class CS2_Tags : BasePlugin
 		return HookResult.Continue;
 	}
 
-	private void SetPlayerClanTag()
+	private void SetPlayerClanTag(CCSPlayerController? player)
 	{
-		foreach(CCSPlayerController player in Utilities.GetPlayers())
-            	{
- 
-		if (player == null || !player.IsValid || player.IsBot || player.IsHLTV || player.AuthorizedSteamID == null) continue;
+		if (player == null || !player.IsValid || player.IsBot || player.IsHLTV || player.AuthorizedSteamID == null) return;
 
 		string steamid = player.SteamID!.ToString();
 
@@ -431,7 +448,6 @@ public class CS2_Tags : BasePlugin
 				}
 			}
 		}
-  		}
 	}
 
 	private string TeamName(int teamNum)
